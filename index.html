@@ -19,6 +19,15 @@
       </tfoot>
     </table>
     <script type="text/javascript">
+        //Use this to specify size of the bingo card, ie 5 is 5x5 or 25
+        var urlParam = function (name, w) {
+            w = w || window;
+            var rx = new RegExp('[\&|\?]' + name + '=([^\&\#]+)'),
+                val = w.location.search.match(rx);
+            return !val ? '' : val[1];
+        }
+        var size = urlParam('size');
+        if (size == 0) { size = 5 };    
       var cliffless = /cliffless/.test(location.search);
       var free = /free/.test(location.search);
       var backgroundImages = [
@@ -36,22 +45,26 @@
         'background-image',
         'url("http://cdn.akamai.steamstatic.com/steamcommunity/public/images/items/440/' + backgroundImages[Math.floor(Math.random() * backgroundImages.length)] + '.jpg")'
         );
-        var spaces = ['2+ Mini-Sentries', '3+ Idle in Spawn', '3+ Snipers or Spies on Team', 'Accusations of Hacking', 'Australium Weapon', 'Medic drops Uber',
-            'Bad grammar in chat', 'Complaints in Chat', 'Demoman or Soldier Suicide', 'Die Next to Health Kit', 'Doesn\'t Speak English', 'Dominate an Unusual Hat Wearer', 'Full-Health "Medic!" Spam',
-            'Gibus', 'Hacker', 'Health Stolen From Flaming Ally', 'Idle Heavy Eating Sandvich', 'MLP Avatar', '"Voice command spam', 'No Medic at Start of Round', 'Furry Avatar', "Weeb Avatar",
+        var spaces = ['2+ Mini-Sentries', '3+ Idle in Spawn', '3+ Snipers or 3+ Spies on Team', 'Accusations of Hacking', 'Australium Weapon', 'Medic drops Uber',
+            'Bad grammar in chat', 'Complaints in Chat', 'Demoman or Soldier Suicide', 'Die Next to Health Kit', 'Doesn\'t Speak English', 'Dominate an Unusual Hat Wearer', '"Medic!" Spam',
+            'Gibus', 'Hacker', 'Health Stolen From Low Health Player', 'Idle Heavy', 'MLP Avatar', 'Voice command spam', 'No Medic', 'Furry Avatar', 'Weeb Avatar',
             'Offensive Name', 'The Phlogistinator', '(Anyone) Taunt-Kill', 'Players Attacking Uber', 'Porn Avatar', 'Pre-Game Conga', 'Pyro Doesn\'t Extinguish Teammate',
             'Spy is Being Dominated', 'Spy is Dominating', 'Spy Misses 2 Stabs in a Row', 'Strange Festive Weapon', 'Taunted in Kill Cam', 'Teleporter Entrance Next to Exit',
-            'Teleporter Facing Wrong Direction', 'Trade', '"Try-Hard"', 'Vote Kick', 'Racism in chat', '3+ level 1 on team', 'Level 1 topscores', '(I) Topscore', '(I) MVP', '2+ Players not playing the game', 'a Combo stomps',
+            'Teleporter Facing Wrong Direction', 'Trade', 'Try-Hard', 'Vote Kick', 'Racism in chat', '2+ level 1 on team', 'Level 1 topscores', '(I) Topscore', '(I) MVP', '2+ Players not playing the game', 'a Combo stomps',
             '2+ Engies, no Teleporters', '(I) Overtime win', 'Friendlies', 'Caribou (Free space)', 'Unconventional Uber target', 'Medic heals enemy spy', 'Engineer topscores', 'World\'s Worst Tryhard',
-            'Melee crits twice in a row', 'Sentry in a \'Sentry spot\'', 'Medic only uses medigun', 'Player with clan tag in name', 'Dead Ringer', 'Ambassador', 'Dies to map hazard', 'Rocket Jumper', 'Loose Cannon', 'Brass Beast', 'Vaccinator',
+            'Melee crit kill', 'Sentry in a \'Sentry spot\'', 'Medic only uses medigun', 'Player with clan tag in name', 'Dead Ringer', 'Ambassador', 'Dies to map hazard', 'Rocket Jumper', 'Loose Cannon', 'Brass Beast', 'Vaccinator',
             '(Anyone) Random Crit multikill', 'Scout takes teleporter', 'OwO / UwU in chat', 'WM1', '3+ \'?\' Avatars', 'Huntsman', 'Stock/Gibus Sniper', 'Egotist in chat', 'Player with 3+ Dominations', 'Dominate 2 players',
             'Player duel', 'Meme Melee', '\'Homophobia\' in chat', 'Demoknight', 'Less than 8 players', 'Edgy weapon name', 'Fat Scout', 'WM2 / Airblast spam', '15+ second overtime', 'Topscoring player autobalanced', 'Autobalanced',
             'Autobalanced in last 30 seconds', 'Unusual Medic', 'Unusual Demo', '(Anyone) 10 Killstreak', '(Anyone) Penetration Kill', 'Sticky Spam', '5000+ Strange', '2+ Ubers at round start', '50 Point difference in team',
             'Painted weapon', '(Anyone) Finds weapon', '(Anyone) Finds crate / case', '2+ Heavies', 'Sniper gets headshot at gate open', 'Chat spam', 'Medic ubersaw kill', 'Technical win (PL/CP)', 'Stock engineer',
-            'Shotgun Pyro', 'Axtinguisher', 'Parachute', '(Anyone) 3+ Chainstab', 'Medic crossbow kill', 'Spawncamping', 'Level 3 Sentry at spawn', '\'Vocal strategist\' in chat', 'Macros in chat', 'Festive weapon', 'xXxUserNamexXx',
-            'Glyphic username', '3+ People waiting at tele entrance', 'Force-A-Nature', '(Anyone) Reflect kill', 'Medic misses arrow twice in a row', 'Frontier justice', 'Jarate 2+ people', 'Diamondback', 'Less than 3 people cap objective',
-            'Milk / Jarate extinguish', '(Anyone) 5 Killstreak', 'Kill an enemy as they kill you', '4+ Support classes', 'Unusual wearer ubered', '10+ Point leader', 'Facestab', 'Furry hate in chat', '(Anyone) Complete contract',
-            ];
+            'Shotgun Pyro', 'Pyro Melee kill', 'Parachute', '(Anyone) 3+ Chainstab', 'Medic crossbow kill', 'Spawncamping', 'Level 3 Sentry at spawn', '\'Vocal strategist\' in chat', 'Macros in chat', 'Festive weapon', 'xXxUserNamexXx',
+            'Glyphic username', '2+ People waiting at tele entrance', 'Force-A-Nature', '(Anyone) Reflect kill', 'Medic misses arrow twice', 'Frontier justice', 'Jarate 2+ people', 'Diamondback', 'Less than 3 people cap objective',
+            'Milk / Jarate extinguish', '(Anyone) 5 Killstreak', 'Kill an enemy as they kill you', '4+ Support classes', 'Unusual wearer ubered', '15+ Point leader', 'Facestab', 'Furry hate in chat', '(Anyone) Complete contract',
+            'Play Heavy for a round', 'Play Sniper for a round', 'Play Medic for a round', 'Spy fails trickstab', 'Sniper is dominating', 'Heavy throws sandvich', 'Lime/Hot Pink',
+            'Pyro defending Engineer', 'Shotgun Soldier', 'Play Engineer for a round', 'Get an Ambassador headshot kill', 'Kill the enemy MVP', '(I) Cap the objective twice', 'Drop a combo',
+            'Players taunting in spawn', 'Unusual Demo/Soldier', 'Sniper in useless positions', 'Engineer building on last / at spawn', 'Edgy/Lewd Sign', 'Crits complaint/bind in chat',
+            'Player re-queues', 'Use the Rocket Jumper or Sticky Jumper for a round', 'Hit a player with the sandman ball', 'Player bleeds to death', '(Anyone) Flaming huntsman kill',
+            'Kill using Minicrits','Behead someone','3+ People using killstreak weapons','Use a Banner','Mini-Sentry on defending team','(Anyone) Double-Donk'];
       if (!cliffless) {
         spaces.push('Airblasts Off Cliff');
         spaces.push('Walks Off Cliff');
@@ -68,9 +81,9 @@
             }
       shuffle(spaces);
       var tbody = document.getElementsByTagName('tbody').item(0);
-      for (var x = 0; x < 5; x++) {
+      for (var x = 0; x < size; x++) {
         var tr = document.createElement('tr');
-        for (var y = 0; y < 5; y++) {
+        for (var y = 0; y < size; y++) {
           var td = document.createElement('td');
           if (free && x === 2 && y === 2) {
             td.className = 'selected';
