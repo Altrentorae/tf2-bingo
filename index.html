@@ -27,7 +27,7 @@
             return !val ? '' : val[1];
         }
         var size = urlParam('size');
-        if (size == 0) { size = 5 };    
+        if (size <= 0) { size = 5 };    
       var cliffless = /cliffless/.test(location.search);
       var free = /free/.test(location.search);
       var backgroundImages = [
